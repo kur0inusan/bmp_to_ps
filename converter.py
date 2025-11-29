@@ -36,7 +36,7 @@ with open("main.ps", "w") as f:
     width, height = img.size
     f.write("%!PS-Adobe-3.0\n")
     f.write("% This file is created by python.\n")
-    f.write("% source:https://github.com/kur0inusan/bmp_to_ps/blob/main/converter.py")
+    f.write("% source: https://github.com/kur0inusan/bmp_to_ps/blob/main/converter.py")
     CanvasHeight = height * PixelSize
     CanvasWidth = width * PixelSize
     f.write(f"<< /PageSize [{CanvasWidth} {CanvasHeight}] >> setpagedevice\n")
