@@ -5,13 +5,13 @@ def color_to_ps(colors,name,f):
     for y in range(len(colors)):
         f.write("    [")
         for x in range(len(colors[y])):
-            f.write(f"{colors[x][y]} ")
+            f.write(f"{colors[y][x]} ")
         f.write("]\n")
     f.write("] def\n")
 
 # CanvasSize will depend on the image u load
-CanvasWidth = 280
-CanvasHeight = 420
+CanvasWidth = 420
+CanvasHeight = 280
 
 #PixelSize・・・Zoom rate
 #PixelSize = 1
@@ -36,32 +36,37 @@ with open("main.ps", "w") as f:
     width, height = img.size
     f.write("%!PS-Adobe-3.0\n")
     f.write("% This file is created by python.\n")
-    f.write("% source: https://github.com/kur0inusan/bmp_to_ps/blob/main/converter.py")
+    f.write("% source: https://github.com/kur0inusan/bmp_to_ps/blob/main/converter.py\n")
+    print(f"CanvasSize: {CanvasHeight} x {CanvasWidth}")
     CanvasHeight = height * PixelSize
     CanvasWidth = width * PixelSize
     f.write(f"<< /PageSize [{CanvasWidth} {CanvasHeight}] >> setpagedevice\n")
     # ここから本質の部分
     pixels = img.load()
-    R = [[0] * width for _ in range(height)]
-    G = [[0] * width for _ in range(height)]
-    B = [[0] * width for _ in range(height)]
+    R = [[0] * height for _ in range(width)]
+    G = [[0] * height for _ in range(width)]
+    B = [[0] * height for _ in range(width)]
     for y in range(height):
         for x in range(width):
             r, g, b = pixels[x, y]
-            R[y][x] = r // WeightLevel    
-            G[y][x] = g // WeightLevel
-            B[y][x] = b // WeightLevel
-    R.reverse()
-    G.reverse()
-    B.reverse()
+            R[x][y] = r // WeightLevel    
+            G[x][y] = g // WeightLevel
+            B[x][y] = b // WeightLevel
+    # R.reverse()
+    # G.reverse()
+    # B.reverse()
+    for i in range(width):
+        R[i].reverse()
+        G[i].reverse()
+        B[i].reverse()
     color_to_ps(R,"R",f)
     color_to_ps(G,"G",f)
     color_to_ps(B,"B",f)
     tmp = [
         f"/PixelSize {PixelSize} def\n",
-        f"0 1 {height-1} {"{"}\n",
+        f"0 1 {width-1} {"{"}\n",
         f"    /i exch def\n",
-        f"    0 1 {width-1} {"{"}\n",
+        f"    0 1 {height-1} {"{"}\n",
         f"        /j exch def\n",
         f"        newpath\n",
         f"        R i get j get {Div} div\n",
